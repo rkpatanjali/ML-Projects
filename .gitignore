@@ -1,6 +1,6 @@
 artifacts/
 *.pkl
-venv/
+mlenv/
 __pycache__/
 .env
 models/*.pkl
