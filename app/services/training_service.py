@@ -62,23 +62,26 @@ def train_model():
     joblib.dump(model, MODEL_PATH,compress=3)
 
     print("Model saved successfully.")
-    with engine.connect() as conn:
-        conn.execute(
-        text("""
-            INSERT INTO model_registry.models
-            (model_name, version, mse, r2_score, artifact_path)
-            VALUES
-            (:model_name, :version, :mse, :r2_score, :artifact_path)
-        """),
-        {
-            "model_name": "linear_regression",
-            "version": "v1",
-            "mse": mse,
-            "r2_score": r2,
-            "artifact_path": str(MODEL_PATH)
-        }
-    )
-    conn.commit()
+    try:
+        with engine.connect() as conn:
+            conn.execute(
+            text("""
+                INSERT INTO model_registry.models
+                (model_name, version, mse, r2_score, artifact_path)
+                VALUES
+                (:model_name, :version, :mse, :r2_score, :artifact_path)
+            """),
+            {
+                "model_name": "linear_regression",
+                "version": "v1",
+                "mse": mse,
+                "r2_score": r2,
+                "artifact_path": str(MODEL_PATH)
+            }
+        )
+            conn.commit()
+    except Exception as e:
+        print(f"Database write failed (non-critical): {e}")
     rf_model = RandomForestRegressor(random_state=42)
 
     rf_model.fit(X_train, y_train)
@@ -90,23 +93,26 @@ def train_model():
     print(f"RF R2 Score: {rf_r2}")
     joblib.dump(rf_model, RF_MODEL_PATH,compress=3)
     print("Model saved successfully.")
-    with engine.connect() as conn:
-        conn.execute(
-        text("""
-            INSERT INTO model_registry.models
-            (model_name, version, mse, r2_score, artifact_path)
-            VALUES
-            (:model_name, :version, :mse, :r2_score, :artifact_path)
-        """),
-        {
-            "model_name": "randomforest_regression",
-            "version": "v1",
-            "mse": rf_mse,
-            "r2_score": rf_r2,
-            "artifact_path": str(RF_MODEL_PATH)
-        }
-    )
-    conn.commit()
+    try:
+        with engine.connect() as conn:
+            conn.execute(
+            text("""
+                INSERT INTO model_registry.models
+                (model_name, version, mse, r2_score, artifact_path)
+                VALUES
+                (:model_name, :version, :mse, :r2_score, :artifact_path)
+            """),
+            {
+                "model_name": "randomforest_regression",
+                "version": "v1",
+                "mse": rf_mse,
+                "r2_score": rf_r2,
+                "artifact_path": str(RF_MODEL_PATH)
+            }
+        )
+            conn.commit()
+    except Exception as e:
+        print(f"Database write failed (non-critical): {e}")
     
 
 if __name__ == "__main__":
