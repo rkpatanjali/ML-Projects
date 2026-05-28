@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import requests
 
@@ -14,6 +15,8 @@ latitude = st.number_input("Latitude")
 longitude = st.number_input("Longitude")
 
 
+API_BASE = os.environ.get("API_URL", "http://127.0.0.1:8000")
+
 if st.button("Predict"):
     payload = {
         "medinc": medinc,
@@ -26,10 +29,7 @@ if st.button("Predict"):
         "longitude": longitude
     }
 
-    response = requests.post(
-        "http://127.0.0.1:8000/predict",
-        json=payload
-    )
+    response = requests.post(f"{API_BASE}/predict", json=payload)
 
     result = response.json()
 
