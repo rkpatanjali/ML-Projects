@@ -46,7 +46,7 @@ def train_model():
     print(f"MSE: {mse}")
     print(f"R2 Score: {r2}")
 
-    joblib.dump(model, MODEL_PATH)
+    joblib.dump(model, MODEL_PATH,compress=3)
 
     print("Model saved successfully.")
     with engine.connect() as conn:
@@ -75,7 +75,7 @@ def train_model():
     rf_r2 = r2_score(y_test, rf_predictions)
 
     print(f"RF R2 Score: {rf_r2}")
-    joblib.dump(rf_model, RF_MODEL_PATH)
+    joblib.dump(rf_model, RF_MODEL_PATH,compress=3)
     print("Model saved successfully.")
     with engine.connect() as conn:
         conn.execute(
