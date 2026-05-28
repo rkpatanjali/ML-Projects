@@ -1,0 +1,33 @@
+# .git is always ignored
+.git
+.gitignore
+
+# Node files
+node_modules/
+npm-debug.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.Python
+env/
+mlenv/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test & Build
+.pytest_cache/
+dist/
+build/
+
+# Data
+data/
+artifacts/
