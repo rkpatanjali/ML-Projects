@@ -1,9 +1,12 @@
 import joblib
 import pandas as pd
+from pathlib import Path
 
+ROOT_DIR = Path(__file__).resolve().parents[2]
+ARTIFACT_DIR = ROOT_DIR / "artifacts"
 
-model = joblib.load("artifacts/linear_regression_model.pkl")
-rf_model = joblib.load("artifacts/rf_model.pkl")
+model = joblib.load(ARTIFACT_DIR / "linear_regression_model.pkl")
+rf_model = joblib.load(ARTIFACT_DIR / "rf_model.pkl")
 
 
 def predict_house_price(data):

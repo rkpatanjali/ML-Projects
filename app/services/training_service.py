@@ -1,5 +1,6 @@
 import pandas as pd
 import joblib
+from pathlib import Path
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
@@ -7,6 +8,13 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.ensemble import RandomForestRegressor
 from app.core.database import engine
 from sqlalchemy import text
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
+ARTIFACT_DIR = ROOT_DIR / "artifacts"
+ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
+
+MODEL_PATH = ARTIFACT_DIR / "linear_regression_model.pkl"
+RF_MODEL_PATH = ARTIFACT_DIR / "rf_model.pkl"
 
 def fetch_processed_data():
     query = "SELECT * FROM processed_data.housing_features"
@@ -38,7 +46,7 @@ def train_model():
     print(f"MSE: {mse}")
     print(f"R2 Score: {r2}")
 
-    joblib.dump(model, "artifacts/linear_regression_model.pkl")
+    joblib.dump(model, MODEL_PATH)
 
     print("Model saved successfully.")
     with engine.connect() as conn:
@@ -54,7 +62,7 @@ def train_model():
             "version": "v1",
             "mse": mse,
             "r2_score": r2,
-            "artifact_path": "artifacts/linear_regression_model.pkl"
+            "artifact_path": str(MODEL_PATH)
         }
     )
     conn.commit()
@@ -67,7 +75,7 @@ def train_model():
     rf_r2 = r2_score(y_test, rf_predictions)
 
     print(f"RF R2 Score: {rf_r2}")
-    joblib.dump(rf_model, "artifacts/rf_model.pkl")
+    joblib.dump(rf_model, RF_MODEL_PATH)
     print("Model saved successfully.")
     with engine.connect() as conn:
         conn.execute(
@@ -82,7 +90,7 @@ def train_model():
             "version": "v1",
             "mse": rf_mse,
             "r2_score": rf_r2,
-            "artifact_path": "artifacts/rf_model.pkl"
+            "artifact_path": str(RF_MODEL_PATH)
         }
     )
     conn.commit()
