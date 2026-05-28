@@ -21,8 +21,15 @@ def load_models():
         from app.services.training_service import train_model
         train_model()
 
-    model = joblib.load(MODEL_PATH)
-    rf_model = joblib.load(RF_MODEL_PATH)
+    try:
+        model = joblib.load(MODEL_PATH)
+        rf_model = joblib.load(RF_MODEL_PATH)
+    except Exception as e:
+        print(f"Model load failed: {e}. Re-training models.")
+        from app.services.training_service import train_model
+        train_model()
+        model = joblib.load(MODEL_PATH)
+        rf_model = joblib.load(RF_MODEL_PATH)
 
 
 def predict_house_price(data):

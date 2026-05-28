@@ -15,7 +15,7 @@ latitude = st.number_input("Latitude")
 longitude = st.number_input("Longitude")
 
 
-API_BASE = os.environ.get("API_URL", "http://127.0.0.1:8000")
+API_BASE = os.environ.get("API_URL", "http://accurate-adventure-production-9eb3.up.railway.app")
 
 if st.button("Predict"):
     payload = {
@@ -29,10 +29,12 @@ if st.button("Predict"):
         "longitude": longitude
     }
 
-    response = requests.post(f"{API_BASE}/predict", json=payload)
-
-    result = response.json()
-
-    st.success(
-        f"Predicted House Value: {result['predicted_house_value']}"
-    )
+    try:
+        response = requests.post(f"{API_BASE}/predict", json=payload, timeout=15)
+        response.raise_for_status()
+        result = response.json()
+        st.success(f"Predicted House Value: {result['predicted_house_value']}")
+    except requests.exceptions.RequestException as e:
+        st.error(f"Request failed: {e}")
+    except ValueError:
+        st.error("Unable to decode response JSON. Check the backend response.")
