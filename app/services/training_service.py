@@ -27,10 +27,18 @@ def fetch_processed_data():
         print("Falling back to local California housing dataset for training.")
         dataset = fetch_california_housing(as_frame=True)
         df = dataset.frame
-        if "MedHouseValue" in df.columns:
-            df = df.rename(columns={"MedHouseValue": "medhouseval"})
-        elif "MedHouseVal" in df.columns:
-            df = df.rename(columns={"MedHouseVal": "medhouseval"})
+        # Standardize column names to match expected schema
+        df = df.rename(columns={
+            "MedInc": "medinc",
+            "HouseAge": "houseage",
+            "AveRooms": "averooms",
+            "AveBedrms": "avebedrms",
+            "Population": "population",
+            "AveOccup": "aveoccup",
+            "Latitude": "latitude",
+            "Longitude": "longitude",
+            "MedHouseVal": "medhouseval"
+        })
         df["id"] = range(1, len(df) + 1)
         df["batch_id"] = 1
         df["created_at"] = pd.Timestamp("2020-01-01")
