@@ -15,7 +15,7 @@ latitude = st.number_input("Latitude")
 longitude = st.number_input("Longitude")
 
 
-API_BASE = os.environ.get("API_URL", "http://accurate-adventure-production-9eb3.up.railway.app")
+API_BASE = os.environ.get("API_URL", "https://accurate-adventure-production-9eb3.up.railway.app")
 
 if st.button("Predict"):
     payload = {
